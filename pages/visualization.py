@@ -148,9 +148,35 @@ with col4:
     st.plotly_chart(fig4, use_container_width=True)
 
 # Third Row: SHAP Summary Plot (within an expander)
-# Third Row: SHAP Summary Plot (within an expander)
 st.subheader("Feature Importance via SHAP")
 with st.expander("View SHAP Summary Plot"):
+
+    # Apply a white background to the entire expander
+    st.markdown("""
+        <style>
+        .streamlit-expanderContent {
+            background-color: white !important;
+            color: black !important;
+            border-radius: 10px;
+            padding: 1rem;
+        }
+        .element-container:has(div[data-testid="stExpander"]) {
+            background-color: white !important;
+            border-radius: 10px;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+        div[data-testid="stExpander"] {
+            background-color: white !important;
+            border-radius: 10px;
+        }
+        div[data-testid="stImage"] {
+            background-color: white !important;
+            padding: 1rem;
+            border-radius: 10px;
+        }
+        </style>
+    """, unsafe_allow_html=True)
 
     # Allow user to select features dynamically
     available_features = df.select_dtypes(include=['number']).columns.tolist()
@@ -171,9 +197,42 @@ with st.expander("View SHAP Summary Plot"):
         explainer = shap.TreeExplainer(model)
         shap_values = explainer.shap_values(X_test)
 
-        # Create and display SHAP summary plot
-        fig_shap = plt.figure(figsize=(10, 6))
-        shap.summary_plot(shap_values, X_test, feature_names=selected_features, show=False)
+        # Create a white figure with full white background
+        fig_shap = plt.figure(figsize=(12, 7), facecolor='white')
+        
+        # Set all elements to have white background
+        plt.rcParams.update({
+            'figure.facecolor': 'white', 
+            'axes.facecolor': 'white',
+            'savefig.facecolor': 'white',
+            'text.color': 'black',
+            'axes.labelcolor': 'black',
+            'xtick.color': 'black',
+            'ytick.color': 'black',
+            'figure.edgecolor': 'white',
+            'savefig.edgecolor': 'white'
+        })
+        
+        # Set a white background for the matplotlib figure
+        ax = plt.gca()
+        ax.set_facecolor('white')
+        fig_shap.patch.set_facecolor('white')
+        
+        # Create SHAP summary plot with explicit background color
+        shap.summary_plot(
+            shap_values, 
+            X_test, 
+            feature_names=selected_features, 
+            show=False, 
+            plot_size=(12, 7),
+            color_bar_label='Feature value',
+            plot_type='dot'
+        )
+        
+        # Add padding and ensure all text is visible
+        plt.tight_layout(pad=2.0)
+        
+        # Render the plot with a white background
         st.pyplot(fig_shap)
 
     else:

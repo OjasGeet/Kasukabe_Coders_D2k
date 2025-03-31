@@ -7,8 +7,7 @@ import numpy as np
 
 # Configure page layout and title
 st.set_page_config(
-    page_title="Smart Task Management Dashboard",
-    page_icon="📊",
+    page_title="Task360",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -20,25 +19,115 @@ st.markdown("""
     :root {
         --background-color: #111111;
         --secondary-bg: #1e1e1e;
+        --card-bg: #2d2d2d;
         --text-color: #ffffff;
         --accent: #3498db;
+        --success: #2ecc71;
+        --warning: #f1c40f;
+        --danger: #e74c3c;
     }
     
+    /* Global styles */
     .stApp {
-        background-color: var(--background-color);
+        background-color: var(--background-color) !important;
         color: var(--text-color);
     }
-    
-    .main {
-        background-color: var(--background-color);
+
+    /* Fix for white header strip */
+    .stApp > header {
+        background-color: var(--background-color) !important;
+    }
+
+    /* Fix for deployment bar */
+    [data-testid="stToolbar"] {
+        background-color: var(--background-color) !important;
+        right: 0;
+        top: 0;
+        position: fixed;
+        z-index: 999990;
+    }
+
+    [data-testid="stDecoration"] {
+        background-color: var(--background-color) !important;
+        height: 0 !important;
+    }
+
+    [data-testid="stHeader"] {
+        background-color: var(--background-color) !important;
+        height: 0 !important;
+    }
+
+    /* Hide Streamlit branding */
+    #MainMenu, header[data-testid="stHeader"] {
+        display: none !important;
+    }
+
+    footer {
+        display: none !important;
+    }
+
+    /* Remove padding at the top */
+    .main .block-container {
+        padding-top: 0rem !important;
+        padding-bottom: 1rem;
+    }
+
+    /* Sidebar/Drawer Styling */
+    .css-1d391kg, .css-1p05t8e {
+        background-color: var(--card-bg) !important;
+    }
+
+    section[data-testid="stSidebar"] {
+        background-color: var(--card-bg);
+        border-right: 1px solid #333333;
+    }
+
+    section[data-testid="stSidebar"] .stMarkdown {
         color: var(--text-color);
     }
-    
+
+    section[data-testid="stSidebar"] button[kind="secondary"] {
+        background-color: transparent;
+        border-color: #333333;
+    }
+
+    section[data-testid="stSidebar"] .stSelectbox label,
+    section[data-testid="stSidebar"] .stSelectbox span {
+        color: var(--text-color) !important;
+    }
+
+    /* Sidebar Radio Buttons */
+    .st-cc, .st-cd, .st-ce, .st-bd, .st-be, .st-bf {
+        background-color: var(--card-bg) !important;
+        color: var(--text-color) !important;
+    }
+
+    .st-c0 {
+        background-color: var(--accent) !important;
+    }
+
+    /* Sidebar Expander */
+    .css-pkbazv {
+        background-color: var(--card-bg) !important;
+    }
+
+    /* Sidebar Text */
+    .css-17lntkn {
+        color: var(--text-color) !important;
+    }
+
+    /* Sidebar Selection */
+    .css-1outpf7 {
+        background-color: var(--accent) !important;
+    }
+
+    /* Metric cards */
     .stMetric {
-        background-color: var(--secondary-bg);
+        background-color: var(--card-bg) !important;
         border-radius: 10px;
         padding: 1rem;
         box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        border: 1px solid #333333;
     }
     
     .stMetric:hover {
@@ -46,35 +135,40 @@ st.markdown("""
         transition: all 0.3s ease;
     }
     
+    /* Text elements */
     .stMarkdown {
-        color: var(--text-color);
-    }
-    
-    h1, h2, h3, h4, h5, h6 {
         color: var(--text-color) !important;
     }
     
+    h1, h2, h3, h4, h5, h6, p, span, div {
+        color: var(--text-color) !important;
+    }
+    
+    /* Buttons */
     .stButton>button {
         background-color: var(--accent);
-        color: white;
+        color: var(--text-color);
         border: none;
         padding: 0.5rem 1rem;
         border-radius: 5px;
         transition: all 0.3s ease;
+        width: 100%;
     }
     
     .stButton>button:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+        background-color: #2980b9;
     }
     
     /* Activity cards */
     .activity-card {
-        background-color: var(--secondary-bg);
+        background-color: var(--card-bg) !important;
         padding: 1rem;
         border-radius: 8px;
         margin: 0.5rem 0;
         transition: all 0.3s ease;
+        border: 1px solid #333333;
     }
     
     .activity-card:hover {
@@ -84,12 +178,51 @@ st.markdown("""
     
     /* Chart backgrounds */
     .js-plotly-plot {
-        background-color: var(--secondary-bg) !important;
+        background-color: var(--card-bg) !important;
     }
     
-    /* Sidebar */
-    .css-1d391kg {
-        background-color: var(--secondary-bg);
+    /* Input fields */
+    .stTextInput>div>div>input {
+        background-color: var(--card-bg);
+        color: var(--text-color);
+        border-color: #333333;
+    }
+    
+    /* Selectbox */
+    .stSelectbox>div>div {
+        background-color: var(--card-bg);
+        color: var(--text-color);
+    }
+    
+    /* DataFrame */
+    .dataframe {
+        background-color: var(--card-bg) !important;
+        color: var(--text-color) !important;
+    }
+    
+    .dataframe th {
+        background-color: var(--secondary-bg) !important;
+        color: var(--text-color) !important;
+    }
+    
+    .dataframe td {
+        background-color: var(--card-bg) !important;
+        color: var(--text-color) !important;
+    }
+    
+    /* Status colors */
+    .status-completed { color: var(--success) !important; }
+    .status-delayed { color: var(--warning) !important; }
+    .status-missed { color: var(--danger) !important; }
+    
+    /* Custom card styles */
+    .custom-card {
+        background-color: var(--card-bg);
+        border: 1px solid #333333;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
     }
     </style>
 """, unsafe_allow_html=True)
@@ -104,8 +237,21 @@ if 'page' in st.query_params:
 
 # Header with branding
 st.markdown("""
-    <h1 style='text-align: center; margin-bottom: 2rem; color: #ffffff;'>
-        📊 SMART TASK MANAGEMENT DASHBOARD
+    <h1 style='
+        text-align: center; 
+        margin-bottom: 2rem; 
+        color: #ffffff;
+        font-size: 3.5rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        background: linear-gradient(45deg, #3498db, #2ecc71);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        padding: 1rem 0;
+    '>
+        Task360
     </h1>
 """, unsafe_allow_html=True)
 
@@ -233,68 +379,40 @@ if df is not None:
                 timestamp = task.get('Timestamp', pd.NaT)
                 
                 status_color = {
-                    'Completed': '#4CAF50',
-                    'Missed': '#F44336',
-                    'Delayed': '#FFC107'
-                }.get(task_status, '#7f8c8d')
+                    'Completed': 'var(--success)',
+                    'Missed': 'var(--danger)',
+                    'Delayed': 'var(--warning)'
+                }.get(task_status, '#95a5a6')
                 
                 if pd.notna(timestamp):
                     st.markdown(f"""
-                    <div style='padding: 10px; margin: 5px 0; border-radius: 5px; background-color: #f8f9fa;'>
-                        <span style='color: {status_color};'>●</span> Task "{task_type}" {task_status} at {timestamp.strftime('%Y-%m-%d %H:%M')}
+                    <div class='activity-card'>
+                        <span style='color: {status_color} !important;'>●</span> Task "{task_type}" {task_status} at {timestamp.strftime('%Y-%m-%d %H:%M')}
                     </div>
                     """, unsafe_allow_html=True)
                 else:
                     st.markdown(f"""
-                    <div style='padding: 10px; margin: 5px 0; border-radius: 5px; background-color: #f8f9fa;'>
-                        <span style='color: {status_color};'>●</span> Task "{task_type}" {task_status}
+                    <div class='activity-card'>
+                        <span style='color: {status_color} !important;'>●</span> Task "{task_type}" {task_status}
                     </div>
                     """, unsafe_allow_html=True)
         
         with col8:
             st.markdown("#### Key Insights")
-            # Calculate insights from the data
             peak_hour = df[df['missed'] == 1]['Hour_of_Day'].mode().iloc[0] if not df[df['missed'] == 1].empty else None
             task_types = df.groupby('Task_Type')['missed'].mean().sort_values(ascending=False) if 'Task_Type' in df.columns else pd.Series()
             high_risk_type = task_types.index[0] if not task_types.empty else "Unknown"
             
-            # Calculate weekend vs weekday completion rates
             weekend_completion = df[df['Weekend'] == 1]['Task_Status'].eq('Completed').mean() * 100
             weekday_completion = df[df['Weekend'] == 0]['Task_Status'].eq('Completed').mean() * 100
             
             st.markdown(f"""
-            <div style='padding: 15px; border-radius: 5px; background-color: #f8f9fa;'>
-                <p style='margin: 5px 0;'><span style='color: #F44336;'>●</span> Peak missed tasks occur at {peak_hour}:00</p>
-                <p style='margin: 5px 0;'><span style='color: #F44336;'>●</span> {high_risk_type} tasks have the highest risk of being missed</p>
-                <p style='margin: 5px 0;'><span style='color: #4CAF50;'>●</span> Weekend tasks show {weekend_completion:.1f}% completion rate vs {weekday_completion:.1f}% for weekdays</p>
+            <div class='custom-card'>
+                <p style='margin: 5px 0;'><span class='status-missed'>●</span> Peak missed tasks occur at {peak_hour}:00</p>
+                <p style='margin: 5px 0;'><span class='status-missed'>●</span> {high_risk_type} tasks have the highest risk of being missed</p>
+                <p style='margin: 5px 0;'><span class='status-completed'>●</span> Weekend tasks show {weekend_completion:.1f}% completion rate vs {weekday_completion:.1f}% for weekdays</p>
             </div>
             """, unsafe_allow_html=True)
-
-        # Bottom Row: Action Buttons
-        st.markdown("### 🛠 Quick Actions")
-        col9, col10, col11 = st.columns(3)
-        
-        with col9:
-            if st.button("📊 View Detailed Analysis"):
-                st.session_state.current_page = "Visualization"
-                st.query_params['page'] = "Visualization"
-                st.rerun()
-        
-        with col10:
-            if st.button("📝 Update Task Assignments"):
-                st.session_state.current_page = "To-Do List"
-                st.query_params['page'] = "To-Do List"
-                st.rerun()
-        
-        with col11:
-            if st.button("📥 Export Data"):
-                csv = df.to_csv(index=False).encode("utf-8")
-                st.download_button(
-                    "Download Data",
-                    data=csv,
-                    file_name="facility_tasks_export.csv",
-                    mime="text/csv"
-                )
 
     elif st.session_state.current_page == "Visualization":
         # Import and run the visualization page content

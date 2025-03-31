@@ -10,6 +10,32 @@ from sklearn.preprocessing import LabelEncoder
 
 # Configure page layout
 st.set_page_config(page_title="Task Prediction", page_icon="🔮", layout="wide")
+
+# Add custom CSS to fix the deployment bar and padding
+st.markdown("""
+    <style>
+    /* Fix deployment bar */
+    [data-testid="stToolbar"] {
+        visibility: hidden;
+    }
+    
+    /* Adjust main content padding */
+    .main .block-container {
+        padding-top: 2rem !important;
+    }
+    
+    /* Hide decoration */
+    [data-testid="stDecoration"] {
+        display: none;
+    }
+    
+    /* Adjust header */
+    [data-testid="stHeader"] {
+        display: none;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 st.title("Task Completion Prediction")
 st.markdown('<style>div.block-container{padding-top:1rem;}</style>', unsafe_allow_html=True)
 

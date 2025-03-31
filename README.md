@@ -1,12 +1,8 @@
 # Smart Task Facility Management Dashboard
 
-Team: Kasukabe_Coders
+Team: Kasukabe_Coders\n
 
-Team: Aagnya Mistry (Leader)
-
-      Ojas Geet
-      
-      Krishna Chavda
+Team: Aagnya Mistry (Leader), Ojas Geet, Krishna Chavda\n
 
 ## Overview
 
